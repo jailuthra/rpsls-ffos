@@ -1,10 +1,10 @@
 {
 	"name" : "RPSLS",
 	"description" : "A rock-paper-scissors-lizard-spock game, against AI.",
-    "launch_path" : "/rpsls-ffos/",
+    "launch_path" : "/app.html",
 	"icons": {
-    "120": "/rpsls-ffos/rpsls120.png",
-    "60": "/rpsls-ffos/rpsls60.png"
+    "120": "/rpsls120.png",
+    "60": "/rpsls60.png"
   },
 	"developer": {
 		"name" : "Jai Luthra",
