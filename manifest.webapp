@@ -1,7 +1,7 @@
 {
 	"name" : "RPSLS",
 	"description" : "A rock-paper-scissors-lizard-spock game, against AI.",
-    "launch_path" : "/rpsls-ffos/app.html",
+    "launch_path" : "/rpsls-ffos/",
 	"icons": {
     "128": "/rpsls-ffos/rpsls128.png",
     "60": "/rpsls-ffos/rpsls60.png"

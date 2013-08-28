@@ -2,28 +2,380 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no" />
   <title>RPSLS</title>
-  <script>
-    // Turn it to false to always install 'normal' package
-    var supportHIDPI = false;
-    var isFFOS = ("mozApps" in navigator && navigator.userAgent.search("Mobile") != -1);
 
-    if ( isFFOS ) {
-      var manifestUrl = 'http://buildingfirefoxos.github.io/Building-Blocks/package/package.manifest';
-      var req = navigator.mozApps.installPackage(manifestUrl);
-      req.onsuccess = function() {
-        console.log(this.result.origin);
-      };
-      req.onerror = function() {
-        console.log(this.error.name);
-      };
+  <!-- Building blocks -->
+  <link rel="stylesheet" href="style/action_menu.css">
+  <link rel="stylesheet" href="style/buttons.css">
+  <link rel="stylesheet" href="style/confirm.css">
+  <link rel="stylesheet" href="style/edit_mode.css">
+  <link rel="stylesheet" href="style/headers.css">
+  <link rel="stylesheet" href="style/input_areas.css">
+  <link rel="stylesheet" href="style/status.css">
+  <link rel="stylesheet" href="style/switches.css">
+  <link rel="stylesheet" href="style_unstable/drawer.css">
+  <link rel="stylesheet" href="style_unstable/lists.css">
+  <link rel="stylesheet" href="style_unstable/progress_activity.css">
+  <link rel="stylesheet" href="style_unstable/scrolling.css">
+  <link rel="stylesheet" href="style_unstable/seekbars.css">
+  <link rel="stylesheet" href="style_unstable/tabs.css">
+  <link rel="stylesheet" href="style_unstable/toolbars.css">
 
-    } else {
-      window.location.href = "app.html"
+  <!-- Icons -->
+  <link rel="stylesheet" href="icons/styles/action_icons.css">
+  <link rel="stylesheet" href="icons/styles/media_icons.css">
+  <link rel="stylesheet" href="icons/styles/comms_icons.css">
+  <link rel="stylesheet" href="icons/styles/settings_icons.css">
+
+  <!-- Fonts -->
+  <link href='http://fonts.googleapis.com/css?family=Droid+Serif' rel='stylesheet' type='text/css'>
+
+  <!-- Transitions -->
+  <link rel="stylesheet" href="transitions.css">
+  
+  <!-- Util CSS: some extra tricks -->
+  <link rel="stylesheet" href="util.css">
+  <link rel="stylesheet" href="fonts.css">
+
+  <!-- Additional markup to make Building Blocks kind of cross browser -->
+  <link rel="stylesheet" href="cross_browser.css">
+
+  <!-- Gameplay Script -->
+  <script type="text/javascript" defer src="js/game.js"></script>
+
+  <style>
+    #index {
+      height: 100%;
+    }
+    [data-position="right"] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      transform: translateX(100%);
+      -webkit-transform: translateX(100%);
+      z-index: 15;
+      z-index: 100; /* -> drawer */
+    }
+    section[role="region"][data-position="right"] {
+      position: absolute;
+    }
+    [data-position="right"].current {
+      animation: rightToCurrent 0.4s forwards;
+      -webkit-animation: rightToCurrent 0.4s forwards;
+    }
+    [data-position="right"].right {
+      animation: currentToRight 0.4s forwards;
+      -webkit-animation: currentToRight 0.4s forwards;
+    }
+    [data-position="current"].left {
+      animation: currentToLeft 0.4s forwards;
+      -webkit-animation: currentToLeft 0.4s forwards;
+    }
+    [data-position="current"].current {
+      animation: leftToCurrent 0.4s forwards;
+      -webkit-animation: leftToCurrent 0.4s forwards;
+    }
+    [data-position="back"] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: -1;
+      opacity: 0;
+      /* z-index: 100; -> drawer */
+    }
+    [data-position="back"].fade-in {
+      z-index: 120;
+      animation: fadeIn 0.2s forwards;
+      -webkit-animation: fadeIn 0.2s forwards;
+    }
+    [data-position="back"].fade-out {
+      animation: fadeOut 0.2s forwards;
+      -webkit-animation: fadeOut 0.2s forwards;
     }
 
-  </script>
+    [data-position="edit-mode"] {
+      position: absolute;
+      top: -5rem;
+      left: 0;
+      right: 0;
+      bottom: -7rem;
+      z-index: -1;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    [data-position="edit-mode"].edit {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 120;
+      opacity: 1;
+    }
+
+    /* Headers */
+    #headers section[role="region"] {
+      margin-bottom: 1.5rem;
+    }
+    #headers section[role="region"]:not(#drawer) {
+      display: inline;
+    }
+    #headers article header:first-child {
+      margin-top: 1.5rem;
+    }
+    #headers section[role="region"] header h2 {
+      margin: 0 0 1.5rem 0;
+    }
+
+    /* Drawer */
+    section[role="region"]:not(#drawer) {
+      transition: none;
+      left: 0;
+      z-index: 0;
+      padding-left: 0;
+    }
+    section[role="region"]:not(#drawer) > header:first-child {
+      margin-left: 0;
+    }
+    section[role="region"]:not(#drawer) > header:first-child h1 {
+      margin-left: 3rem;
+    }
+    section[role="region"]#drawer > header:first-child h1 {
+      margin-left: 4.5rem;
+    }
+    section[role="region"]:not(#drawer) > header:first-child > a {
+      width: 5rem;
+    }
+    section[role="region"]#drawer > header:first-child > a .icon {
+      width: 3.5rem;
+    }
+    section[data-type="sidebar"] + section[role="region"] > header:first-child > button, 
+    section[data-type="sidebar"] + section[role="region"] > header:first-child > a {
+      background-position: 3.5rem center;
+    }
+    section[role="region"]:not(#drawer) > header:first-child > a .icon:after {
+      width: 2rem;
+    }
+    section[role="region"]#drawer > header:first-child > a .icon:after {
+      width: 3.5rem;
+    }
+
+    /* New Game */
+    .content
+    {
+      padding-left: 7%;
+      padding-right: 7%;
+      color: #111;
+    }
+    .heading
+    {
+      text-align: center;
+      font-size: 3.2em;
+      font-weight: normal;
+    }
+    .sub-heading
+    {
+      text-align: center;
+      font-size: 2em;
+      font-weight: normal;
+    }
+    .info 
+    {
+      font-size: 1.5em;
+      text-align: center;
+    }
+    #input
+    {
+      width: 260px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Gameplay */
+    #arena
+    {
+      margin-top: 0;
+    }
+    .score
+    {
+      font-size: 5em;
+      font-weight: bold;
+      line-height: 1%;
+      color: #3253AD;
+      font-family: "Droid Serif", serif;
+    }
+    .name_display
+    {
+      font-size: 1.3em;
+      padding: 4px;
+      font-family: "Droid Serif", serif;
+      word-wrap: break-word;
+      width: 23%;
+    }
+    #user_score, #user_name
+    {
+      float: left;
+      text-align:left;
+    }
+    #ai_score, #ai_name
+    {
+      float: right;
+      text-align: right;
+    }
+    #vs
+    {
+      text-align: center;
+      font-size: 5em;
+      line-height: 95%;
+      font-family: "Droid Serif", serif;
+      margin-bottom: 5px;
+      padding-bottom: 0px;
+    }
+    #hands, #result
+    {
+      margin-left: 0px;
+      left: 0px;
+      margin-right: 0px;
+      right: 0px;
+      position: fixed;
+      margin-top: 20px;
+      text-align: center;
+    }
+    .hand
+    {
+      height: 95px;
+      padding: 3px;
+    }
+    #btn-nextround
+    { 
+      width: 260px;
+    }
+
+
+    /* Device rotation */
+    .landscape section[role="region"]#drawer > header:first-child {
+      //background: black;
+    }
+  </style>
 </head>
 <body>
+  <section id="index" data-position="current" class="skin-organic">
+    <section data-type="sidebar">
+      <header>
+        <menu type="toolbar">
+          <a href="#">Done</a>
+        </menu>
+        <h1>Options</h1>
+      </header>
+      <nav>
+        <ul>
+          <li><a href="index.html">Restart Game</a></li>
+          <li><a href="#" onclick="window.close();">Exit</a></li>
+        </ul>
+      </nav>
+    </section>
+
+    <section id="drawer" role="region" class="skin-organic">
+      <header class="fixed">
+        <a href="#"><span class="icon icon-menu">hide sidebar</span></a>
+        <a href="#drawer"><span class="icon icon-menu">show sidebar</span></a>
+        <h1>RPSLS</h1>
+      </header>
+      <article class="content scrollable header">
+        <div>
+            <h1 class="heading">New Game</h1>
+  
+            <div class="info">
+               Challenge the AI to a game of rock-paper-scissors-lizard-spock.<br />
+               Simply enter your nickname below, and start playing!
+            </div>
+
+            <div id="input">
+            <br/>
+               <span class="sub-heading">Nickname:</span> 
+               <br />
+                 <input type="text" id="nick" name="nick" onkeydown="if (event.keyCode == 13) document.getElementById('btn-play').click()" /> 
+               <br /> <br />
+               <a href="#" class="recommend" id="btn-play" onclick="getNick()" role="button">Play!</a>
+            </div>
+  
+        </div>
+      </article>
+    </section> <!-- end drawer -->
+  </section> <!-- end index -->
+
+  <!--···························· GamePlay ····························-->
+  <section role="region" id="gameplay" data-position="right">
+    <section role="region" class="skin-organic">
+      <header class="fixed">
+        <a id="btn-play-back" href="#"><span class="icon icon-back">back</span></a>
+        <h1>RPSLS</h1>
+      </header>
+      <article class="content scrollable header">
+        <div id="arena">
+            <span id="user_score" class="score">0</span>
+            <span id="ai_score" class="score">0</span>
+            <span id="user_name" class="name_display"></span>
+            <span id="ai_name" class="name_display">AI</span>
+            <h1 id="vs">VS</h1>
+            <div class="info">First to win three, wins the game.</div>
+            <div id="result" style="display: none;">
+                <img class="hand" src="" id="user_hand">
+                <span class="heading">v/s</span>
+                <img class="hand" src="" id="ai_hand">
+                <br /><br /><br />
+                <a href="#" class="recommend" id="btn-nextround" onclick="nextRound()" role="button">Next Round!</a>
+            </div>
+            <div id="hands" style="">
+                <img class="hand" id="btn-rock" src="img/rock.svg" onclick='buttonClick("Rock")'>
+                <img class="hand" id="btn-paper" src="img/paper.svg" onclick='buttonClick("Paper")'>
+                <img class="hand" id="btn-scissors" src="img/scissors.svg" onclick='buttonClick("Scissors")'>
+                <img class="hand" id="btn-lizard" src="img/lizard.svg" onclick='buttonClick("Lizard")'>
+                <img class="hand" id="btn-spock" src="img/spock.svg" onclick='buttonClick("Spock")'>
+            </div>
+
+        </div>
+
+      </article>
+    </section>
+  </section>
+
+  <script type="text/javascript" defer src="js/app.js"></script>
+
+  <script>
+    var mobile = (navigator.userAgent.search("Mobile") != -1);
+    if ( mobile ) {
+      //Let's reduce font-size when in landscape  
+      //fs: current font-size
+      var fs = parseInt(window.getComputedStyle(document.documentElement).getPropertyValue( 'font-size' ), 10);
+      var mql = window.matchMedia("(orientation: portrait)");
+
+      if(mql.matches) { //portrait
+        document.documentElement.style.fontSize = fs + 'px';
+        document.body.classList.remove('landscape');
+      } else { // landscape
+        document.documentElement.style.fontSize = fs * 0.7 + 'px';
+        document.body.classList.add('landscape');
+      }
+
+      mql.addListener(function(m) {
+        if(m.matches) { //portrait
+          document.documentElement.style.fontSize = fs + 'px';
+          document.body.classList.remove('landscape');
+        }
+        else { //landscape
+          document.documentElement.style.fontSize = fs * 0.7 + 'px';
+          document.body.classList.add('landscape');
+        }
+      });
+    }
+  </script>
 </body>
 </html>
+
