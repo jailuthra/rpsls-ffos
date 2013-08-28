@@ -1,0 +1,53 @@
+@import url(headers.css);
+
+@font-face {
+    font-family: "Fira Sans";
+    src: url("../fonts/FiraSans/FiraSans-Regular.otf");
+}
+
+html, body 
+{
+    margin: 0px;
+    padding: 0px;
+    font-size: 10px;
+    font-family: Fira Sans;
+}
+
+body
+{
+    background: rgb(247, 247, 249); 
+}
+
+#content
+{
+    padding-left: 7%;
+    padding-right: 7%;
+}
+
+.heading
+{
+    text-align: center;
+    font-size: 3.2em;
+    font-weight: normal;
+}
+
+.sub-heading
+{
+    text-align: center;
+    font-size: 2em;
+    font-weight: normal;
+}
+
+.info 
+{
+    font-size: 1.5em;
+    text-align: center;
+}
+
+#input
+{
+    width: 260px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
