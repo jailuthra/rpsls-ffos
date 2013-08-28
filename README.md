@@ -2,7 +2,7 @@ Rock Paper Scissors Lizard Spock 0.9 (Beta)
 ========================================
 
 A simple web-app. Made for Firefox OS.  
-It will published at [Firefox Marketplace](https://marketplace.firefox.com/app/rps+ls).
+It will published at [Firefox Marketplace](https://marketplace.firefox.com/app/rps-ls).
 
 ## TODO:
 
