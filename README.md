@@ -1,4 +1,4 @@
-Rock Paper Scissors Lizard Spock (Alpha)
+Rock Paper Scissors Lizard Spock 0.9 (Beta)
 ========================================
 
 A simple web-app. Made for Firefox OS.  
@@ -6,8 +6,9 @@ It will published at [Firefox Marketplace](https://marketplace.firefox.com/app/r
 
 ## TODO:
 
-* Add functionality.
-* Improve UI.
+* <del>Add functionality.</del>
+* Stop the game after three rounds.
+* Add color change by score comparison.
 * Fetch people for beta testing.
 
 ## LICENSE:  
