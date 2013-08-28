@@ -5,6 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, user-scalable=no" />
   <title>RPSLS</title>
+
   <!-- Building blocks -->
   <link rel="stylesheet" href="style/action_menu.css">
   <link rel="stylesheet" href="style/buttons.css">
@@ -170,6 +171,7 @@
     {
       padding-left: 7%;
       padding-right: 7%;
+      color: #111;
     }
     .heading
     {
@@ -231,12 +233,11 @@
       text-align: center;
       font-size: 5em;
       line-height: 95%;
-      color: #111;
       font-family: "Droid Serif", serif;
       margin-bottom: 5px;
       padding-bottom: 0px;
     }
-    #hands
+    #hands, #result
     {
       margin-left: 0px;
       left: 0px;
@@ -251,11 +252,15 @@
       height: 95px;
       padding: 3px;
     }
+    #btn-nextround
+    { 
+      width: 260px;
+    }
 
 
     /* Device rotation */
     .landscape section[role="region"]#drawer > header:first-child {
-      background: green;
+      //background: black;
     }
   </style>
 </head>
@@ -320,12 +325,19 @@
             <span id="ai_name" class="name_display">AI</span>
             <h1 id="vs">VS</h1>
             <div class="info">First to win three, wins the game.</div>
-            <div id="hands">
-                <img class="hand" id="btn-rock" src="img/rock.svg">
-                <img class="hand" id="btn-paper" src="img/paper.svg">
-                <img class="hand" id="btn-scissors" src="img/scissors.svg">
-                <img class="hand" id="btn-lizard" src="img/lizard.svg">
-                <img class="hand" id="btn-spock" src="img/spock.svg">
+            <div id="result" style="display: none;">
+                <img class="hand" src="" id="user_hand">
+                <span class="heading">v/s</span>
+                <img class="hand" src="" id="ai_hand">
+                <br /><br /><br />
+                <a href="#" class="recommend" id="btn-nextround" onclick="nextRound()" role="button">Next Round!</a>
+            </div>
+            <div id="hands" style="">
+                <img class="hand" id="btn-rock" src="img/rock.svg" onclick='buttonClick("Rock")'>
+                <img class="hand" id="btn-paper" src="img/paper.svg" onclick='buttonClick("Paper")'>
+                <img class="hand" id="btn-scissors" src="img/scissors.svg" onclick='buttonClick("Scissors")'>
+                <img class="hand" id="btn-lizard" src="img/lizard.svg" onclick='buttonClick("Lizard")'>
+                <img class="hand" id="btn-spock" src="img/spock.svg" onclick='buttonClick("Spock")'>
             </div>
 
         </div>
