@@ -15,6 +15,10 @@ function randomHand() {
 }
 
 function computeWinner(user_hand, ai_hand) {
+  if (user_hand == ai_hand)
+    return "draw";
+  else
+  {
     if (user_hand == "Rock") {
         if (ai_hand == "Scissors" || ai_hand == "Lizard")
             return "user";
@@ -44,13 +48,14 @@ function computeWinner(user_hand, ai_hand) {
             return "user";
         else
             return "ai";
-    }    
+    }
+  }    
 }
 
 function computeScores(round_winner) {
     if (round_winner == "user")
         user_score += 1;
-    else
+    else if (round_winner == "ai")
         ai_score += 1;
 }
 
@@ -78,3 +83,9 @@ function buttonClick(user_hand) {
     reflectChoices(user_hand, ai_hand);
     reflectScores();
 }
+
+function nextRound() {
+    document.querySelector("#hands").setAttribute("style", "");
+    document.querySelector("#result").setAttribute("style", "display:none;");
+}
+
